@@ -116,7 +116,7 @@ export class JSSlider {
     });
   };
 
-  onImageNext = (event) => {
+  onImageNext = () => {
     // console.log(this, "onImageNext");
     // [this] wskazuje na element [.js-slider]
 
@@ -145,7 +145,7 @@ export class JSSlider {
     }
   };
 
-  onImagePrev = (event) => {
+  onImagePrev = () => {
     console.log(this, "onImagePrev");
     // [this] wskazuje na element [.js-slider]
 
