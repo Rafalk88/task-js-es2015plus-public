@@ -68,7 +68,7 @@ export class JSSlider {
   initCustomEvents = () => {
     this.imagesList.forEach((img) => {
       img.addEventListener("js-slider-img-click", (event) => {
-        this.onImageClick(event, this.sliderRootElement, this.imagesSelector);
+        this.onImageClick(event);
       });
     });
 
