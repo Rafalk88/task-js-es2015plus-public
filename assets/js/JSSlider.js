@@ -1,7 +1,8 @@
 export class JSSlider {
   constructor(DOMelement = ".gallery__item") {
+    this.imagesSelector = DOMelement;
     this.sliderRootElementSelector = ".js-slider";
-    this.imagesList = document.querySelectorAll(DOMelement);
+    this.imagesList = document.querySelectorAll(this.imagesSelector);
     this.sliderRootElement = document.querySelector(
       this.sliderRootElementSelector
     );
@@ -113,6 +114,64 @@ export class JSSlider {
 
       document.querySelector(".js-slider__thumbs").appendChild(thumbElement);
     });
+  };
+
+  onImageNext = (event) => {
+    // console.log(this, "onImageNext");
+    // [this] wskazuje na element [.js-slider]
+
+    // todo:
+    // 1. wyszukać aktualny wyświetlany element przy pomocy [.js-slider__thumbs-image--current]
+    // 2. znaleźć element następny do wyświetlenie względem drzewa DOM
+    // 3. sprawdzić czy ten element istnieje
+    // 4. przełączyć klasę [.js-slider__thumbs-image--current] do odpowiedniego elementu
+    // 5. podmienić atrybut src dla [.js-slider__image]
+    const currentClassName = "js-slider__thumbs-image--current";
+    const current = this.sliderRootElement.querySelector(
+      "." + currentClassName
+    );
+
+    const parentCurrent = current.parentElement;
+    const nextElement = parentCurrent.nextElementSibling;
+    if (
+      nextElement &&
+      !nextElement.className.includes("js-slider__thumbs-item--prototype")
+    ) {
+      const img = nextElement.querySelector("img");
+      img.classList.add(currentClassName);
+
+      this.sliderRootElement.querySelector(".js-slider__image").src = img.src;
+      current.classList.remove(currentClassName);
+    }
+  };
+
+  onImagePrev = (event) => {
+    console.log(this, "onImagePrev");
+    // [this] wskazuje na element [.js-slider]
+
+    // todo:
+    // 1. wyszukać aktualny wyświetlany element przy pomocy [.js-slider__thumbs-image--current]
+    // 2. znaleźć element poprzedni do wyświetlenie względem drzewa DOM
+    // 3. sprawdzić czy ten element istnieje i czy nie posiada klasy [.js-slider__thumbs-item--prototype]
+    // 4. przełączyć klasę [.js-slider__thumbs-image--current] do odpowiedniego elementu
+    // 5. podmienić atrybut src dla [.js-slider__image]
+    const currentClassName = "js-slider__thumbs-image--current";
+    const current = this.sliderRootElement.querySelector(
+      "." + currentClassName
+    );
+
+    const parentCurrent = current.parentElement;
+    const prevElement = parentCurrent.previousElementSibling;
+    if (
+      prevElement &&
+      !prevElement.className.includes("js-slider__thumbs-item--prototype")
+    ) {
+      const img = prevElement.querySelector("img");
+      img.classList.add(currentClassName);
+
+      this.sliderRootElement.querySelector(".js-slider__image").src = img.src;
+      current.classList.remove(currentClassName);
+    }
   };
 }
 
