@@ -13,13 +13,15 @@ export class JSSlider {
     this.initCustomEvents();
   };
 
-  initEvents = () => {
+  onClickEvent = () => {
     this.imagesList.forEach((item) => {
       item.addEventListener("click", (e) => {
         this.fireCustomEvent(e.currentTarget, "js-slider-img-click");
       });
     });
+  };
 
+  onClickNextEvent = () => {
     // todo:
     // utwórz event o nazwie [click], który ma uruchomić event [js-slider-img-next]
     // na elemencie [.js-slider__nav--next]
@@ -31,7 +33,9 @@ export class JSSlider {
         this.fireCustomEvent(this.sliderRootElement, "js-slider-img-next");
       });
     }
+  };
 
+  onClickPrevEvent = () => {
     // todo:
     // utwórz event o nazwie [click], który ma uruchomić event [js-slider-img-prev]
     // na elemencie [.js-slider__nav--prev]
@@ -43,7 +47,9 @@ export class JSSlider {
         this.fireCustomEvent(this.sliderRootElement, "js-slider-img-prev");
       });
     }
+  };
 
+  onClickCloseEvent = () => {
     // todo:
     // utwórz event o nazwie [click], który ma uruchomić event [js-slider-close]
     // tylko wtedy gdy użytkownik kliknie w [.js-slider__zoom]
@@ -55,6 +61,13 @@ export class JSSlider {
         }
       });
     }
+  };
+
+  initEvents = () => {
+    this.onClickEvent();
+    this.onClickNextEvent();
+    this.onClickPrevEvent();
+    this.onClickCloseEvent();
   };
 
   fireCustomEvent = (element, name) => {
@@ -146,7 +159,7 @@ export class JSSlider {
   };
 
   onImagePrev = () => {
-    console.log(this, "onImagePrev");
+    // console.log(this, "onImagePrev");
     // [this] wskazuje na element [.js-slider]
 
     // todo:
