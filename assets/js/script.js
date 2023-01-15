@@ -1,4 +1,4 @@
-import Slider from "./Slider";
+import JSSlider from "./JSSlider";
 
 import "./../css/style.css";
 
@@ -8,116 +8,11 @@ const init = () => {
     img.dataset.sliderGroupName = Math.random() > 0.5 ? "nice" : "good";
   }); // za każdym przeładowaniem strony przydzielaj inną nazwę grupy dla zdjęcia
 
-  runJSSlider();
+  const jsSlider = new JSSlider(".gallery__item");
+  jsSlider.run();
 };
 
 document.addEventListener("DOMContentLoaded", init);
-
-const runJSSlider = () => {
-  const imagesSelector = ".gallery__item";
-  const sliderRootSelector = ".js-slider";
-
-  const imagesList = document.querySelectorAll(imagesSelector);
-  const sliderRootElement = document.querySelector(sliderRootSelector);
-
-  initEvents(imagesList, sliderRootElement);
-  initCustomEvents(imagesList, sliderRootElement, imagesSelector);
-};
-
-const initEvents = (imagesList, sliderRootElement) => {
-  imagesList.forEach((item) => {
-    item.addEventListener("click", (e) => {
-      fireCustomEvent(e.currentTarget, "js-slider-img-click");
-    });
-  });
-
-  // todo:
-  // utwórz event o nazwie [click], który ma uruchomić event [js-slider-img-next]
-  // na elemencie [.js-slider__nav--next]
-  const navNext = sliderRootElement.querySelector(".js-slider__nav--next");
-  if (navNext) {
-    navNext.addEventListener("click", (e) => {
-      fireCustomEvent(sliderRootElement, "js-slider-img-next");
-    });
-  }
-
-  // todo:
-  // utwórz event o nazwie [click], który ma uruchomić event [js-slider-img-prev]
-  // na elemencie [.js-slider__nav--prev]
-  const navPrev = sliderRootElement.querySelector(".js-slider__nav--prev");
-  if (navPrev) {
-    navPrev.addEventListener("click", (e) => {
-      fireCustomEvent(sliderRootElement, "js-slider-img-prev");
-    });
-  }
-
-  // todo:
-  // utwórz event o nazwie [click], który ma uruchomić event [js-slider-close]
-  // tylko wtedy gdy użytkownik kliknie w [.js-slider__zoom]
-  const zoom = sliderRootElement.querySelector(".js-slider__zoom");
-  if (zoom) {
-    zoom.addEventListener("click", (e) => {
-      if (e.target === e.currentTarget) {
-        fireCustomEvent(sliderRootElement, "js-slider-close");
-      }
-    });
-  }
-};
-
-const fireCustomEvent = (element, name) => {
-  console.log(element.className, "=>", name);
-
-  const event = new CustomEvent(name, {
-    bubbles: true,
-  });
-
-  element.dispatchEvent(event);
-};
-
-const initCustomEvents = (imagesList, sliderRootElement, imagesSelector) => {
-  imagesList.forEach((img) => {
-    img.addEventListener("js-slider-img-click", (event) => {
-      onImageClick(event, sliderRootElement, imagesSelector);
-    });
-  });
-
-  sliderRootElement.addEventListener("js-slider-img-next", onImageNext);
-  sliderRootElement.addEventListener("js-slider-img-prev", onImagePrev);
-  sliderRootElement.addEventListener("js-slider-close", onClose);
-};
-
-const onImageClick = (event, sliderRootElement, imagesSelector) => {
-  // todo:
-  // 1. dodać klasę [js-slider--active], aby pokazać całą sekcję
-  // 2. wyszukać ściężkę do klikniętego elementu i wstawić do [.js-slider__image]
-  // 3. pobrać nazwę grupy zapisaną w dataset klikniętego elementu
-  // 4. wyszukać wszystkie zdjęcia należące do danej grupy
-  // 5. utworzyć na podsawie elementu [.js-slider__thumbs-item--prototype] zawartość dla [.js-slider__thumbs]
-  // 6. zaznaczyć przy pomocy klasy [.js-slider__thumbs-image--current], który element jest aktualnie wyświetlany
-  sliderRootElement.classList.add("js-slider--active");
-
-  const src = event.currentTarget.querySelector("img").src;
-  sliderRootElement.querySelector(".js-slider__image").src = src;
-
-  const groupName = event.currentTarget.dataset.sliderGroupName;
-  const thumbsList = document.querySelectorAll(
-    imagesSelector + "[data-slider-group-name=" + groupName + "]"
-  );
-  const prototype = document.querySelector(
-    ".js-slider__thumbs-item--prototype"
-  );
-  thumbsList.forEach((item) => {
-    const thumbElement = prototype.cloneNode(true);
-    thumbElement.classList.remove("js-slider__thumbs-item--prototype");
-    const thumbImg = thumbElement.querySelector("img");
-    thumbImg.src = item.querySelector("img").src;
-    if (thumbImg.src === src) {
-      thumbImg.classList.add("js-slider__thumbs-image--current");
-    }
-
-    document.querySelector(".js-slider__thumbs").appendChild(thumbElement);
-  });
-};
 
 const onImageNext = (event) => {
   console.log(this, "onImageNext");
