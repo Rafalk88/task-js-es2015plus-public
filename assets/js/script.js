@@ -14,33 +14,6 @@ const init = () => {
 
 document.addEventListener("DOMContentLoaded", init);
 
-const onImageNext = (event) => {
-  console.log(this, "onImageNext");
-  // [this] wskazuje na element [.js-slider]
-
-  // todo:
-  // 1. wyszukać aktualny wyświetlany element przy pomocy [.js-slider__thumbs-image--current]
-  // 2. znaleźć element następny do wyświetlenie względem drzewa DOM
-  // 3. sprawdzić czy ten element istnieje
-  // 4. przełączyć klasę [.js-slider__thumbs-image--current] do odpowiedniego elementu
-  // 5. podmienić atrybut src dla [.js-slider__image]
-  const currentClassName = "js-slider__thumbs-image--current";
-  const current = this.querySelector("." + currentClassName);
-
-  const parentCurrent = current.parentElement;
-  const nextElement = parentCurrent.nextElementSibling;
-  if (
-    nextElement &&
-    !nextElement.className.includes("js-slider__thumbs-item--prototype")
-  ) {
-    const img = nextElement.querySelector("img");
-    img.classList.add(currentClassName);
-
-    this.querySelector(".js-slider__image").src = img.src;
-    current.classList.remove(currentClassName);
-  }
-};
-
 const onImagePrev = (event) => {
   console.log(this, "onImagePrev");
   // [this] wskazuje na element [.js-slider]
