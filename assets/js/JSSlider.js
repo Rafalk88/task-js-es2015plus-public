@@ -18,7 +18,6 @@ export class JSSlider {
     this.imagesList.forEach((item) => {
       item.addEventListener("click", (e) => {
         this.fireCustomEvent(e.currentTarget, "js-slider-img-click");
-        this.fireCustomEvent(this.sliderRootElement, "js-slider-autoPhoto-start");
       });
     });
   };
@@ -31,11 +30,19 @@ export class JSSlider {
       ".js-slider__nav--next"
     );
     if (navNext) {
-      navNext.addEventListener("click", (e) => {
+      navNext.addEventListener("click", () => {
         this.fireCustomEvent(this.sliderRootElement, "js-slider-img-next");
+      });
+      navNext.addEventListener("mouseout", () => {
         this.fireCustomEvent(
           this.sliderRootElement,
-          "js-slider-autoPhoto-reset"
+          "js-slider-autoPhoto-start"
+        );
+      });
+      navNext.addEventListener("mouseover", () => {
+        this.fireCustomEvent(
+          this.sliderRootElement,
+          "js-slider-autoPhoto-stop"
         );
       });
     }
@@ -54,6 +61,18 @@ export class JSSlider {
         this.fireCustomEvent(
           this.sliderRootElement,
           "js-slider-autoPhoto-reset"
+        );
+      });
+      navPrev.addEventListener("mouseout", () => {
+        this.fireCustomEvent(
+          this.sliderRootElement,
+          "js-slider-autoPhoto-start"
+        );
+      });
+      navPrev.addEventListener("mouseover", () => {
+        this.fireCustomEvent(
+          this.sliderRootElement,
+          "js-slider-autoPhoto-stop"
         );
       });
     }
@@ -116,10 +135,6 @@ export class JSSlider {
       "js-slider-autoPhoto-stop",
       this.photoIntervalStop
     );
-    this.sliderRootElement.addEventListener(
-      "js-slider-autoPhoto-reset",
-      this.photoResetInterval
-    );
   };
 
   photoIntervalStart = () => {
@@ -131,11 +146,6 @@ export class JSSlider {
   photoIntervalStop = () => {
     clearInterval(this.intervalId);
     this.intervalId = null;
-  };
-
-  photoResetInterval = () => {
-    this.photoIntervalStop();
-    this.photoIntervalStart();
   };
 
   onImageClick = (event) => {
