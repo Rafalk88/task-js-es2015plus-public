@@ -173,6 +173,18 @@ export class JSSlider {
       current.classList.remove(currentClassName);
     }
   };
+
+  onClose = (event) => {
+    // todo:
+    // 1. należy usunać klasę [js-slider--active] dla [.js-slider]
+    // 2. należy usunać wszystkie dzieci dla [.js-slider__thumbs] pomijając [.js-slider__thumbs-item--prototype]
+
+    event.currentTarget.classList.remove("js-slider--active");
+    const thumbsList = this.sliderRootElement.querySelectorAll(
+      ".js-slider__thumbs-item:not(.js-slider__thumbs-item--prototype)"
+    );
+    thumbsList.forEach((item) => item.parentElement.removeChild(item));
+  };
 }
 
 export default JSSlider;
