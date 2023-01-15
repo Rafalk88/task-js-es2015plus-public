@@ -6,6 +6,7 @@ export class JSSlider {
     this.sliderRootElement = document.querySelector(
       this.sliderRootElementSelector
     );
+    this.intervalId = null
   }
 
   run = () => {
@@ -17,6 +18,7 @@ export class JSSlider {
     this.imagesList.forEach((item) => {
       item.addEventListener("click", (e) => {
         this.fireCustomEvent(e.currentTarget, "js-slider-img-click");
+        this.fireCustomEvent(this.sliderRootElement, "js-slider-autoPhoto-start");
       });
     });
   };
@@ -31,6 +33,10 @@ export class JSSlider {
     if (navNext) {
       navNext.addEventListener("click", (e) => {
         this.fireCustomEvent(this.sliderRootElement, "js-slider-img-next");
+        this.fireCustomEvent(
+          this.sliderRootElement,
+          "js-slider-autoPhoto-reset"
+        );
       });
     }
   };
@@ -45,6 +51,10 @@ export class JSSlider {
     if (navPrev) {
       navPrev.addEventListener("click", (e) => {
         this.fireCustomEvent(this.sliderRootElement, "js-slider-img-prev");
+        this.fireCustomEvent(
+          this.sliderRootElement,
+          "js-slider-autoPhoto-reset"
+        );
       });
     }
   };
@@ -58,6 +68,10 @@ export class JSSlider {
       zoom.addEventListener("click", (e) => {
         if (e.target === e.currentTarget) {
           this.fireCustomEvent(this.sliderRootElement, "js-slider-close");
+          this.fireCustomEvent(
+            this.sliderRootElement,
+            "js-slider-autoPhoto-stop"
+          );
         }
       });
     }
@@ -94,6 +108,34 @@ export class JSSlider {
       this.onImagePrev
     );
     this.sliderRootElement.addEventListener("js-slider-close", this.onClose);
+    this.sliderRootElement.addEventListener(
+      "js-slider-autoPhoto-start",
+      this.photoIntervalStart
+    );
+    this.sliderRootElement.addEventListener(
+      "js-slider-autoPhoto-stop",
+      this.photoIntervalStop
+    );
+    this.sliderRootElement.addEventListener(
+      "js-slider-autoPhoto-reset",
+      this.photoResetInterval
+    );
+  };
+
+  photoIntervalStart = () => {
+    if (!this.intervalId) {
+      this.intervalId = setInterval(this.onImageNext, 3000);
+    }
+  };
+
+  photoIntervalStop = () => {
+    clearInterval(this.intervalId);
+    this.intervalId = null;
+  };
+
+  photoResetInterval = () => {
+    this.photoIntervalStop();
+    this.photoIntervalStart();
   };
 
   onImageClick = (event) => {
@@ -145,7 +187,10 @@ export class JSSlider {
     );
 
     const parentCurrent = current.parentElement;
-    const nextElement = parentCurrent.nextElementSibling;
+    let nextElement = parentCurrent.nextElementSibling;
+    if (!nextElement)
+      nextElement =
+        parentCurrent.parentElement.firstElementChild.nextElementSibling;
     if (
       nextElement &&
       !nextElement.className.includes("js-slider__thumbs-item--prototype")
@@ -174,7 +219,9 @@ export class JSSlider {
     );
 
     const parentCurrent = current.parentElement;
-    const prevElement = parentCurrent.previousElementSibling;
+    let prevElement = parentCurrent.previousElementSibling;
+    if (prevElement.className.includes("js-slider__thumbs-item--prototype"))
+      prevElement = parentCurrent.parentElement.lastElementChild;
     if (
       prevElement &&
       !prevElement.className.includes("js-slider__thumbs-item--prototype")
